@@ -17,13 +17,6 @@ export class BoardsService {
   //   return this.boards;
   // }
 
-  async getBoardById(id: number): Promise<Board> {
-    const found = await this.boardRepository.findOne({ where: { id } });
-    if (!found) {
-      throw new NotFoundException(`${id} 해당 아이디를 찾을 수 없습니다`);
-    }
-    return found;
-  }
   // //게시물 생성
   // createBoard(createBoardDto: CreateBoardDto) {
   //   const { title, description } = createBoardDto;
@@ -36,6 +29,10 @@ export class BoardsService {
   //   this.boards.push(board);
   //   return board;
   // }
+
+  async createBoard(createBoardDto: CreateBoardDto): Promise<Board> {
+    return this.boardRepository.createBoard(createBoardDto);
+  }
   // // 특정 게시물 조회
   // getBoardById(id: string): Board {
   //   const found = this.boards.find((board) => board.id === id);
@@ -44,7 +41,13 @@ export class BoardsService {
   //   }
   //   return found;
   // }
-
+  async getBoardById(id: number): Promise<Board> {
+    const found = await this.boardRepository.findOne({ where: { id } });
+    if (!found) {
+      throw new NotFoundException(`${id} 해당 아이디를 찾을 수 없습니다`);
+    }
+    return found;
+  }
   // //특정 게시물 삭제
   // deleteBoard(id: string): void {
   //   //특정 게시물 존재 여부 확인
@@ -52,6 +55,14 @@ export class BoardsService {
 
   //   this.boards = this.boards.filter((board) => board.id !== id);
   // }
+
+  async deleteBoard(id: number): Promise<void> {
+    const result = await this.boardRepository.delete(id);
+    if (result.affected === 0) {
+      throw new NotFoundException(`${id} 해당 아이디를 찾을 수 없습니다`);
+    }
+    console.log(result);
+  }
 
   // //특정 게시물 상태 업데이트
   // updateBoardStatus(id: string, status: BoardStatus): Board {

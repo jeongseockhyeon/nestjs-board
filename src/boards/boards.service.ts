@@ -16,6 +16,9 @@ export class BoardsService {
   // getALlBoards(): Board[] {
   //   return this.boards;
   // }
+  async getAllBoards(): Promise<Board[]> {
+    return this.boardRepository.find();
+  }
 
   // //게시물 생성
   // createBoard(createBoardDto: CreateBoardDto) {

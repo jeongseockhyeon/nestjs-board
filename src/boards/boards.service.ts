@@ -6,6 +6,7 @@ import { BoardRepository } from './board.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Board } from './board.entity';
 import { User } from 'src/auth/user.entity';
+import { GetUser } from 'src/auth/get-user.decorator';
 
 @Injectable()
 export class BoardsService {
@@ -66,8 +67,11 @@ export class BoardsService {
   //   this.boards = this.boards.filter((board) => board.id !== id);
   // }
 
-  async deleteBoard(id: number): Promise<void> {
-    const result = await this.boardRepository.delete(id);
+  async deleteBoard(id: number, user: User): Promise<void> {
+    const result = await this.boardRepository.delete({
+      id,
+      user: { id: user.id },
+    });
     if (result.affected === 0) {
       throw new NotFoundException(`${id} 해당 아이디를 찾을 수 없습니다`);
     }
